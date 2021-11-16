@@ -1,4 +1,4 @@
 ﻿  TetrisGame.cpp
-C:\Users\devin\OneDrive\Desktop\CamState ICS 2020\ICS_214\Labs\Lab08\Tetris\Tetris\TetrisGame.cpp(230,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\devin\OneDrive\Desktop\CamState ICS 2020\ICS_214\Labs\Lab08\Tetris\Tetris\TetrisGame.cpp(230,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\devin\OneDrive\Desktop\CamState ICS 2020\ICS_214\Labs\Lab08\Tetris\Tetris\TetrisGame.cpp(231,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\devin\OneDrive\Desktop\CamState ICS 2020\ICS_214\Labs\Lab08\Tetris\Tetris\TetrisGame.cpp(231,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Tetris.vcxproj -> C:\Users\devin\OneDrive\Desktop\CamState ICS 2020\ICS_214\Labs\Lab08\Tetris\Debug\Tetris.exe

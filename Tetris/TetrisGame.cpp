@@ -22,11 +22,6 @@ TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, Point 
 	scoreText.setFillColor(sf::Color::White);
 	scoreText.setPosition(435, 325);
 
-	// TEST
-	//board.setContent(Gameboard::MAX_X / 2, Gameboard::MAX_Y / 2, 1);
-	//currentShape.setShape(Tetromino::getRandomShape());
-	//currentShape.setGridLoc(board.getSpawnLoc());
-
 }
 
 // Draw anything to do with the game,
@@ -34,8 +29,7 @@ TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, Point 
 //   called every game loop
 void TetrisGame::draw()
 {
-	// TESTING
-	//drawBlock(Point(0,0), gameboardOffset.getX(), gameboardOffset.getY(), Tetromino::TetColor::BLUE_DARK);
+
 	drawGameboard();
 	drawTetromino(currentShape, gameboardOffset);
 	drawTetromino(nextShape, nextShapeOffset);
@@ -52,18 +46,18 @@ void TetrisGame::onKeyPressed(sf::Event event)
 		break;
 
 	case sf::Keyboard::Down:
-		if (!attemptMove(currentShape, 0, 1)) {
+		if (!attemptMove(currentShape, 0, DOWN)) {
 			lock(currentShape);
 			shapePlacedSinceLastGameLoop = true;
 		}
 		break;
 
 	case sf::Keyboard::Left:
-		attemptMove(currentShape, -1, 0);
+		attemptMove(currentShape, LEFT, 0);
 		break;
 
 	case sf::Keyboard::Right:
-		attemptMove(currentShape, 1, 0);
+		attemptMove(currentShape, RIGHT, 0);
 		break;
 
 	case sf::Keyboard::Space:
@@ -199,12 +193,17 @@ void TetrisGame::drop(GridTetromino& shape)
 }
 
 // copy the contents (color) of the tetromino's mapped block locs to the grid.
-//	 1) get current blockshape locs via tetromino.getBlockLocsMappedToGrid()
-//	 2) copy the content (color) to the grid (via gameboard.setContent()) 
+//     1) get the tetromino's mapped locs via tetromino.getBlockLocsMappedToGrid()
+//     2) make Gameboard's isValidPoint() methods public
+//     2) iterate through the mapped locations, if the location is a valid point 
+//         (according to the gameboard) then use Gameboard.setContent() to set the
+//         board content to be the color of the tetromino. 
 void TetrisGame::lock(const GridTetromino& shape)
 {
 	for (Point pt : shape.getBlockLocsMappedToGrid()) {
-		board.setContent(pt, (int)shape.getColor());
+		if (board.isValidPoint(pt)) {
+			board.setContent(pt, (int)shape.getColor());
+		}
 	}
 }
 
@@ -225,8 +224,8 @@ void TetrisGame::lock(const GridTetromino& shape)
 void TetrisGame::drawBlock(const Point& topLeft, int xOffset, int yOffset, Tetromino::TetColor color)
 {
 	blockSprite.setTextureRect(sf::IntRect(static_cast<int>(color) * BLOCK_WIDTH, 0, BLOCK_WIDTH, BLOCK_HEIGHT));
-	int x = topLeft.getX() + gameboardOffset.getX() + (xOffset)*BLOCK_WIDTH;
-	int y = topLeft.getY() + gameboardOffset.getY() + (yOffset)*BLOCK_HEIGHT;
+	int x = topLeft.getX() + (xOffset)*BLOCK_WIDTH;
+	int y = topLeft.getY() + (yOffset)*BLOCK_HEIGHT;
 	blockSprite.setPosition(x, y);
 	window.draw(blockSprite);
 }
@@ -239,12 +238,10 @@ void TetrisGame::drawGameboard()
 	for (int col = 0; col < Gameboard::MAX_Y; col++) {
 		for (int row = 0; row < Gameboard::MAX_X; row++) {
 			if (board.getContent(row, col) != Gameboard::EMPTY_BLOCK) {
-				drawBlock(Point(0, 0), row, col, (Tetromino::TetColor)board.getContent(row, col));
+				drawBlock(gameboardOffset, row, col, (Tetromino::TetColor)board.getContent(row, col));
 			}
-			
 		}
 	}
-
 }
 
 // Draw a tetromino on the window
@@ -255,10 +252,8 @@ void TetrisGame::drawTetromino(const GridTetromino& tetromino, const Point& topL
 {
 	for (Point pt : tetromino.getBlockLocsMappedToGrid())
 	{
-		drawBlock(Point(0,0), pt.getX(), pt.getY(), tetromino.getColor());
+		drawBlock(topLeft, pt.getX(), pt.getY(), tetromino.getColor());
 	}
-
-
 }
 
 // update the score display
@@ -297,9 +292,7 @@ bool TetrisGame::isShapeWithinBorders(const GridTetromino& shape) const
 		{
 			return false;
 		}
-
 	}
-
 	return true;
 }
 
@@ -309,5 +302,11 @@ bool TetrisGame::isShapeWithinBorders(const GridTetromino& shape) const
 //   - advanced: base it on score (higher score results in lower secsPerTick)
 void TetrisGame::determineSecondsPerTick()
 {
+	if (secondsPerTick < MIN_SECONDS_PER_TICK) {
+		secondsPerTick = MIN_SECONDS_PER_TICK;
+	}
+	else {
+		secondsPerTick = MAX_SECONDS_PER_TICK - (score * 0.1);
+	}
 
 }

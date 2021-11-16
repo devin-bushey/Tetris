@@ -117,7 +117,13 @@ public:
 	
 	// print the grid contents to the console (for debugging purposes)
 	//   use std::setw(2) to space the contents out (#include <iomanip>).
-	void printToConsole() const;				
+	void printToConsole() const;	
+
+	// return true if the point is on the grid, false otherwise
+	bool isValidPoint(const Point& p) const;
+
+	// return true if the x,y location is on the grid, false otherwise
+	bool isValidPoint(int x, int y) const;
 
 
 private:
@@ -153,11 +159,7 @@ private:
 	// copy a source row's contents into a target row.
 	void copyRowIntoRow(int sourceRowIndex, int targetRowIndex);
 
-	// return true if the point is on the grid, false otherwise
-	bool isValidPoint(const Point& p) const;	
-	
-	// return true if the x,y location is on the grid, false otherwise
-	bool isValidPoint(int x, int y) const;
+
 				
 };
 

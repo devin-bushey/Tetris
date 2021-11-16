@@ -160,6 +160,10 @@ private:
     Gameboard board;			// the gameboard (grid) to represent where all the blocks are.
     GridTetromino nextShape;	// the tetromino shape that is "on deck".
     GridTetromino currentShape;	// the tetromino that is currently falling.
+
+	int LEFT{ -1 };
+	int RIGHT{ 1 };
+	int DOWN{ 1 };
 	
 	// Graphics members ------------------------------------------
 	const Point gameboardOffset;	// pixel XY offset of the gameboard on the screen
